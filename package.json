@@ -16,7 +16,7 @@
    "license": "MIT",
    "repository": {
       "type": "git",
-      "url": "git+https://github.com/Hauke5/Dialog.git"
+      "url": "git+https://github.com/Hauke5/ProseEditor.git"
    },
    "scripts": {},
    "dependencies": {
