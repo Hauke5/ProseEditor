@@ -2,7 +2,7 @@
 # $(dirname $0) should point to ~/.npm/_npx/.../node_modules/.bin
 
 Bundle="ProseEditor"
-bundle=awk '{print tolower($Bundle)}'
+bundle="prose-editor"
 echo $bundle
 mkdir -p ./$Bundle
 cd ./$Bundle
