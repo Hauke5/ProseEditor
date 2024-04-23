@@ -1,0 +1,23 @@
+.wordcount {
+   font-size       : 12px;
+   font-style      : normal;
+   display         : flex;
+   justify-content : flex-end;
+   align-items     : flex-end;
+   position        : absolute;
+   right           : 0px;
+   width           : 30px;
+   text-align      : right;
+   background-color: rgba(250, 106, 106, 0);
+   filter          : brightness(1.1);
+   color           : #aaa;
+}
+
+.variables {
+   display: grid;
+   grid-template-columns: 130px 1fr 1fr;
+   column-gap: 10px;
+   row-gap:    0.5em;
+   width:      100%;
+   line-height: 1.3em;
+}
