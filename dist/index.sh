@@ -14,4 +14,5 @@ cp -R ./node_modules/@hauke5/utils/dist/lib ./
 cp -R ./node_modules/@hauke5/nextjs-utils/dist/lib ./
 cp -R ./node_modules/@hauke5/dialog/dist/lib ./
 echo "point a 1 browser to http://localhost:3000/examples/"$Bundle
-npm run dev
+npm run build
+npm start

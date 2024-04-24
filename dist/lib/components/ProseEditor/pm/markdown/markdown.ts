@@ -1,7 +1,7 @@
 import { MarkSpec, NodeSpec, Schema }  from 'prosemirror-model';
-import markdownIt, { StateInline }     from 'markdown-it';
+import { StateInline }                 from 'markdown-it/index.js';
+import markdownIt                      from 'markdown-it';
 import type MarkdownIt                 from "markdown-it"
-// import { markdownItTable }             from 'markdown-it-table'
 import { MarkdownParser, MarkdownSerializer }              
                                        from 'prosemirror-markdown';
 import { schema, specs }               from '../../registry';
@@ -18,7 +18,6 @@ const getDefaultMarkdownItTokenizer = (markdowns:{[node:string]:Markdown}) =>
    .use(markdownPlugin(sub.name, markdowns))
    .use(markdownPlugin(sup.name, markdowns))
    .use(markdownPlugin(underline.name, markdowns))
-   // .use(markdownItTable)
 
 
 /** the `markdown` parser (txt -> markdown) */
