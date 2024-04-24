@@ -7,7 +7,7 @@
       "email": "helpfulscripts@gmail.com"
    },
    "bin": {
-      "utils": "dist/index.sh"
+      "utils": "dist/runExample.sh"
    },
    "files": [
       "dist"
