@@ -14,15 +14,15 @@ type InternalContext = {
    views:         EditorView[]
 }
 
-export type ProsemirrorContext = InternalContext & {
+export type ProseEditorContext = InternalContext & {
    addView:    (view:EditorView) => void
    removeView: (view:EditorView) => void
 }
 
-export const prosemirrorContext = createContext<ProsemirrorContext|null>(null)
+export const proseEditorContext = createContext<ProseEditorContext|null>(null)
 
 
-type ProsemirrorContextProps = BaseProps & {
+type ProseEditorContextProps = BaseProps & {
 }
 /**
  * ## ProsemirrorContext
@@ -62,7 +62,7 @@ type ProsemirrorContextProps = BaseProps & {
  * }
  * ```
  */
-export function ProsemirrorContext({children}:ProsemirrorContextProps) {
+export function ProseEditorContext({children}:ProseEditorContextProps) {
    const log                      = useLog(`ProsemirrorContext`)
    const {context, updateContext} = useContextState<InternalContext>({views:[], currentView:null})
    
@@ -75,9 +75,9 @@ export function ProsemirrorContext({children}:ProsemirrorContextProps) {
    },[context.currentView])
    
    return <ErrorBoundarySuspense what={`ProsemirrorContext`}>
-      <prosemirrorContext.Provider value={{...context, addView, removeView}}>
+      <proseEditorContext.Provider value={{...context, addView, removeView}}>
          {children}
-      </prosemirrorContext.Provider>
+      </proseEditorContext.Provider>
    </ErrorBoundarySuspense>
 
    function addView(view:EditorView) {

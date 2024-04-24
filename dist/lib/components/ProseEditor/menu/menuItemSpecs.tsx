@@ -28,7 +28,8 @@ export type MenuItemSpecs = {
    [key:string]:(...params:any[]) => MenuItemSpec
 }
 
-export const menuItemSpecs = (view:EditorView, openDialog?:OpenDialog):MenuItemSpecs => {
+export const menuItemSpecs = (view?:EditorView, openDialog?:OpenDialog):MenuItemSpecs => {
+   if (!view) return {}
    return {
       bold: (short=true)=> ({
          hint:          'Bold\n',

@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState }   
                                  from 'react';
-import { EditorView }            from 'prosemirror-view';
 import { mdiFormatListNumbered } from '@mdi/js';
 import { Dialog, OpenDialog }    from '@/lib/components/Dialog';
 import { Menu, MenuItem, MenuItemSpec, menuSeparator }   
@@ -18,23 +17,31 @@ type ProseEditorMenuProps = BaseProps & {
    items?:  MenuItem[]
 }
 export function ProseEditorMenu({items, ...props}:ProseEditorMenuProps) {
-   const view                      = useCurrentView()
    const [menuItems, setMenuItems] = useState<MenuItem[]>([])
    const openDialog                = useRef<OpenDialog>()
    const {currentView}             = useProseEditorContext()
    const change                    = useSelectionChange(currentView??undefined)
+   const defaultItems              = useDefaultMenu(false, openDialog.current)
 
    useEffect(()=>{
-      if (view.current) setMenuItems(items ?? defaultMenu(false, view.current, openDialog.current))
-   },[view.current, items])
+      setMenuItems(items ?? defaultItems)
+   },[items, defaultItems.length])
    return <>
       <Menu items={menuItems} className={styles.narrativeMenu} {...props} key={`_${change}`}/>
       <Dialog open={open=>openDialog.current=open} className={styles.popover}/>
    </>
 }
 
-export function defaultMenu(compressed=false, view:EditorView, openDialog?:OpenDialog) {
-   const items = menuItemSpecs(view, openDialog)
+/**
+ * return a list of standard menu items for use in `ProseEditorMenu`.
+ * @param compressed (default=false): if `true`, items are organized in pulldown menus for a more compressed display
+ * @param openDialog use
+ * @returns 
+ */
+export function useDefaultMenu(compressed=false, openDialog?:OpenDialog):MenuItem[] {
+   const view  = useCurrentView()
+   if (!view.current) return []
+   const items = menuItemSpecs(view.current, openDialog)
    return compressed ? [
       items.undo(), items.redo(),
       menuSeparator('ver'),

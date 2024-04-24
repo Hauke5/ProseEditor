@@ -1,8 +1,9 @@
 import { MutableRefObject, useContext, useRef }         
                         from "react"
-import { ProsemirrorContext, prosemirrorContext }   
+import { ProseEditorContext, proseEditorContext }   
                         from "../ProseEditorContext"
 import { EditorView }   from "prosemirror-view"
+import { useLog } from "@/lib/hooks"
 
 /** 
  * ## useProseEditorContext
@@ -33,24 +34,10 @@ import { EditorView }   from "prosemirror-view"
  * ```
  * see {@link ProseEditorContext}
  */
-export function useProseEditorContext():ProsemirrorContext {
-   const context = useContext(prosemirrorContext)
-   if (!context) throw Error("useProsemirrorContext is called outside the context. The calling app is responsible for define `ProsemirrorContext`.")
-   return context
-}
-
-
-/**
- * **Uses Prosemirror Context!. Ensure that `ProseMirrorContexct` is set in the calling application.**
- * 
- * Retrieves and returns the `currentView` from the context.
- */
-export function useCurrentView():MutableRefObject<EditorView | undefined> {
-   const context = useProseEditorContext()
-   const view = useRef<EditorView>()
-   if (context)
-      view.current = context.currentView ?? undefined
-   else  
-      throw Error(`useCurrentView requires ProsemirrorContext to be set by the calling function`)
-   return view
+export function useProseEditorContext():ProseEditorContext {
+   const log = useLog(`useProseEditorContext`)
+   const context = useContext(proseEditorContext)
+   if (!context) 
+      log.error('useProsemirrorContext is called outside the context. The calling app is responsible for define `ProsemirrorContext`.')
+   return context ?? {addView:()=>null, removeView:()=>null, currentView:null, views:[]}
 }

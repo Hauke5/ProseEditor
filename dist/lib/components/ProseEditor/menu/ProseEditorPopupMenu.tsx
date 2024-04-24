@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } 
-                        from 'react';
-import { EditorView }   from 'prosemirror-view';
+                           from 'react';
+import { EditorView }      from 'prosemirror-view';
 import { Dialog, OpenDialog }   
-                        from '@/lib/components/Dialog';
-import { Menu }         from '@/lib/components/Menu/Menu';
-import { defaultMenu }  from './ProseEditorMenu';
-import styles           from '../styles/proseEditor.module.scss'
+                           from '@/lib/components/Dialog';
+import { Menu }            from '@/lib/components/Menu/Menu';
+import { useDefaultMenu }  from './ProseEditorMenu';
+import styles              from '../styles/proseEditor.module.scss'
 
 
 export type OpenPopup = (xpos:number, ypos:number)=>Promise<void>
@@ -16,8 +16,9 @@ interface ProseEditorPopupMenuProps {
 }
 export function ProseEditorPopupMenu({open, view}:ProseEditorPopupMenuProps) {
    const [menuStyle, setMenuStyle]  = useState({})
-   const openDialog        = useRef<OpenDialog>()
-   const popupMenu         = useRef<HTMLDialogElement>(null)
+   const openDialog                 = useRef<OpenDialog>()
+   const popupMenu                  = useRef<HTMLDialogElement>(null)
+   const menuItems                  = useDefaultMenu(false, openDialog.current)
 
    useEffect(()=>{   
       // run once to provide opening hook
@@ -26,7 +27,7 @@ export function ProseEditorPopupMenu({open, view}:ProseEditorPopupMenuProps) {
 
    return <>
       <dialog ref={popupMenu} onClick={closePopupMenu} style={menuStyle} className={styles.popupMenu}>
-         <Menu items={defaultMenu(false, view, openDialog.current)} theme={'dark'}/>
+         <Menu items={menuItems} theme={'dark'}/>
       </dialog>
       <Dialog open={open => openDialog.current=open}/>
    </>

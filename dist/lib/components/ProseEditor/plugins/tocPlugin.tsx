@@ -4,7 +4,7 @@ import { Plugin, PluginKey, EditorState }
 import { Decoration, DecorationSet } 
                                  from "prosemirror-view";
 import { pluginTiming }          from "../hooks/useTimings";
-import { useCurrentView }        from "../hooks/useProseEditorContext";
+import { useCurrentView }        from "../hooks/useCurrentView";
 
 
 const pluginName = "tocPlugin"

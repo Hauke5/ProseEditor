@@ -16,6 +16,7 @@ import { OpenPopup, ProseEditorPopupMenu }
                                     from './menu/ProseEditorPopupMenu';
 import styles                       from './styles/proseEditor.module.scss'
 import { corePlugins, schema }      from './registry';
+import { useProseEditorContext }    from './hooks/useProseEditorContext';
 
 
 export function serialize(state:EditorState) {  
@@ -29,7 +30,20 @@ export interface ProseEditorProps extends BaseProps{
    newView?:         (view:EditorView)=>void
    usePopupMenu?:    boolean
 }
-export function ProseEditor({panelID, newContent, className, usePopupMenu, plugins, newView, ...props}:ProseEditorProps) {
+/**
+ * Provides a Prosemirror Editor.
+ * All parameters are optional:
+ * - `panelID` sets the id of the `<div>` used by `Prosemirror` to attach the doc nodes. 
+ * This will be set using `useId()` if omitted
+ * - `newContent`: provides the initial content to be shown in the editor
+ * - `plugins`:   allows a set of app-specific plugins to be installed upon creating the editor
+ * - `newView`: allows a callback to be informed of the `view` instance for this editor
+ * - `usePopupMenu` (default: `true`) will produce a popup menu for formatting options at the cursor location 
+ * @param param 
+ * @returns 
+ */
+export function ProseEditor({panelID, newContent, className, usePopupMenu=true, plugins, newView, ...props}:ProseEditorProps) {
+   const {addView}         = useProseEditorContext()
    const view              = useRef<EditorView>()
    const id                = useId()
    const openPopup         = useRef<OpenPopup>()
@@ -53,16 +67,15 @@ export function ProseEditor({panelID, newContent, className, usePopupMenu, plugi
          openPopup.current?.(e.clientX, e.clientY)
       }
    }
-
    function onClick(e:MouseEvent<HTMLDivElement>) {
       // for some reason, checking todo list items doesn't work without this event
       e.preventDefault()
    }
-
    function createView(content:string) {
       const state = newEditorState(content, plugins?.())
       const view = new EditorView(mount, { state, attributes:{}, dispatchTransaction})
-      newView?.(view)   // inform parent of new view
+      addView(view)
+      newView?.(view)   // inform parent of new view, if defefined
       if (!view.hasFocus()) view.focus();
       return view
    
@@ -71,7 +84,6 @@ export function ProseEditor({panelID, newContent, className, usePopupMenu, plugi
          parent?.replaceChildren(prosemirrorNode)
       }
    }
-   
    function dispatchTransaction(transaction:Transaction) {
       if (view.current) try { 
          view.current.updateState(view.current.state.apply(transaction)) 
@@ -80,7 +92,6 @@ export function ProseEditor({panelID, newContent, className, usePopupMenu, plugi
          console.trace()
       }
    }
-
    function defaultKeyBindings() {
       return keymap({
          "Meta-z": () => view.current
@@ -99,9 +110,6 @@ export function ProseEditor({panelID, newContent, className, usePopupMenu, plugi
    }      
 }
 
-
-
-
 function createDocument(schema:Schema, content:string): Node {
    let node = parser.parse(content)
    if (!node) {
@@ -111,8 +119,6 @@ function createDocument(schema:Schema, content:string): Node {
    }
    return node
 };
-
-
 
 function setupPlugins(defKeyBindings:()=> Plugin<any>, appPlugins:Plugin<any>[]=[]):Plugin<any>[] {
    return  pluginLoader(schema, [
