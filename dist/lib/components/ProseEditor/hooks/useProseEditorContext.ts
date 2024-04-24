@@ -1,9 +1,7 @@
-import { MutableRefObject, useContext, useRef }         
-                        from "react"
+import { useContext }   from "react"
+import { useLog }       from "@/lib/hooks"
 import { ProseEditorContext, proseEditorContext }   
                         from "../ProseEditorContext"
-import { EditorView }   from "prosemirror-view"
-import { useLog } from "@/lib/hooks"
 
 /** 
  * ## useProseEditorContext

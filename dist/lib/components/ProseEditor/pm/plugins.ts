@@ -6,7 +6,7 @@ import { InputRule, inputRules, undoInputRule }
                               from 'prosemirror-inputrules';
 import { dropCursor }         from 'prosemirror-dropcursor';
 import { gapCursor }          from 'prosemirror-gapcursor';
-import * as history           from '../plugins/history';
+import * as history           from '../plugins/historyPlugin';
 
 export type PluginPayload = {
    schema: Schema
