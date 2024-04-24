@@ -1,6 +1,6 @@
 {
    "name": "@hauke5/prose-editor",
-   "version": "1.0.6",
+   "version": "1.0.7",
    "description": "Provides a markdownable text editing component based on Prosemirror",
    "author": {
       "name": "hauke5",
