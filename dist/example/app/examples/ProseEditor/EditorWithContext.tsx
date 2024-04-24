@@ -46,10 +46,10 @@ function MarkdownMonitor({markdown}:{markdown:string}) {
 
 export function InstructionsWithContext() {
    return <ul className={styles.instructions}>
-      Edit the text below. It can be styles using the menu, using Markdown syntax (e.g. **bold**) and some keyboard shortcuts (e.g. CMD-b).
-      <br/>Using <code>ProseEditorContext</code> enables the app to react to...
+      Edit the text below. It can be styles using the menu, using Markdown syntax (e.g. **bold**) and some keyboard shortcuts (e.g. CMD-b).<br/>
+      Using <code>ProseEditorContext</code> enables the app to react to automatically detect...
       <li>changes to the <b>text content</b>, which triggers a <code>setMarkdown</code> call with the serialized latest content. The converted markdown text is shown in the 
-      bottom left panel. See the <code>useEffect</code> code on the right. </li>
+      bottom left panel and automatically updated. See the <code>useEffect</code> code on the right. </li>
       <li>changes in the <b>text selection</b>, which allows the menu bar to reflect the current formatting</li>
    </ul>
 }

@@ -7,8 +7,8 @@
    width   : 100%;
    @import './proseEditor.scss';
 
-   &>div:first-child {  // .ProseMirror-menubar-wrapper
-      outline: none;
+   &>div:first-child {     // .ProseMirror-menubar-wrapper
+      outline: none;       // https://developer.mozilla.org/en-US/docs/Web/CSS/outline
       height : 100%;
       position:relative;
       display: flex !important;
