@@ -1,0 +1,150 @@
+$paragraphVerticalSpace:   5px;
+
+* {
+   white-space: pre-wrap;
+}
+
+p {
+   line-height: 1.3em;
+   color: #444;
+   font-size: 100%;
+   margin-top: $paragraphVerticalSpace;
+   margin-bottom: $paragraphVerticalSpace;
+}
+
+@import './sharedStyles.scss';
+
+h1 {
+   @include header(1);
+}
+
+h2 {
+   @include header(2);
+}
+
+h3 {
+   @include header(3);
+}
+
+h4 {
+   @include header(4);
+}
+
+h5 {
+   @include header(5);
+}
+
+h6 {
+   @include header(6);
+}
+
+strong {
+   color: #666;
+}
+
+ul, ol {
+   padding-left: 10px;
+   li {
+      position: static;
+      padding-left: 10px;
+      margin-left: -2px;
+      &>span {
+         display: block;
+      }
+      &::marker {
+         color:#00c;
+         font-size: 0.9rem;
+      }
+   }
+}
+ul>li {
+   &::marker {
+      content: '>';
+      font-stretch: 50%;
+   }
+   &[hs-todo]>:first-child {
+      margin-top: 6px;
+   }
+}
+ol {
+   list-style-type: decimal;
+   list-style-position: outside;
+   &>li {
+      padding-left: 3px;
+      margin-left:5px;
+      &::marker {
+         font-size: 0.7rem;
+      }
+   }
+}
+li[hs-todo] {
+   display: flex;
+   flex-direction: row;
+   margin-left: -1.2rem;
+   &>span>input[type=checkbox] {
+      margin-top: 1px;
+      margin-right: 4px;
+   }
+}
+
+mark {
+   background-color: #ff0;
+   border-radius: 5px;;
+}
+
+
+button {
+    text { fill: #008; }
+    &.active {
+        background-color: #aaa;
+    }
+}
+
+blockquote {
+   @include blockQuote;
+}
+
+hr {
+   margin: 10px 250px;
+   border:none;
+   padding: 0;
+   border: 1px solid #ccf;
+   border-radius: 2px;
+}
+
+div.hdg1 {
+    font-size: 16px;
+}
+
+var-value {
+   display: inline-block;
+   color: rgb(132, 134, 3);
+}
+
+var-anchor {
+   color: rgba(0,0,0,0);
+   font-size:1%;
+   display: inline-block;
+}
+
+a {
+   text-decoration: underline;
+   text-decoration-thickness: 0.1px;
+   color: #006;
+   cursor: pointer;
+}
+
+
+code {
+   @include code
+}
+
+pre {
+   @include pre
+}
+
+.hidden {
+   color:red;
+   display:none !important;
+}
+

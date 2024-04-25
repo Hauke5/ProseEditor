@@ -22,8 +22,8 @@
       ],
       "baseUrl": ".",
       "paths": {
-         "@/app/*":         ["./dist/example/app/*"],
-         "@/lib/*":         ["./dist/lib/*", "./node_modules/@hauke5/dialog/dist/lib/*", "./node_modules/@hauke5/nextjs-utils/dist/lib/*", "./node_modules/@hauke5/utils/dist/lib/*"],
+         "@/app/*":         ["./example/app/*"],
+         "@/lib/*":         ["./lib/*", "./node_modules/@hauke5/dialog/lib/*", "./node_modules/@hauke5/nextjs-utils/lib/*", "./node_modules/@hauke5/utils/lib/*"],
       }
    },
    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

@@ -1,7 +1,7 @@
 import { ReactNode } 
                      from 'react'
 import { Metadata }  from 'next'
-import '../styles/globals.scss'
+import './styles/globals.scss'
 
 export type LayoutProps = {
    children: ReactNode
