@@ -7,7 +7,7 @@
       "email": "helpfulscripts@gmail.com"
    },
    "bin": {
-      "utils": "runExample.sh"
+      "@hauke5-prose-editor": "runExample.sh"
    },
    "license": "MIT",
    "repository": {
