@@ -13,8 +13,8 @@ Or use `npx` to create and start a standalone NextJS application with an example
 ```
 $ npx hauke5/prose-editor@latest
 ```
-This will start a next development server on port 3010
-Point a browser to http://localhost:3000/example to run the example
+This will start a next development server.
+Point a browser to http://localhost:3010/example to run the app.
 
 ## Usage
 In its simplist form, use the `<ProseEditor>` component to add an editor to a component:

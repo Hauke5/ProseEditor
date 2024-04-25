@@ -15,9 +15,9 @@
       "url": "git+https://github.com/Hauke5/ProseEditor.git"
    },
    "keywords": [
-      "Editor",
+      "Editor Component",
       "Prosemirror",
-      "NextJS",
+      "NextJS Component",
       "React",
       "rich text"
    ],
