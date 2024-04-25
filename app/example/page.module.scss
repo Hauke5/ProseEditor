@@ -40,10 +40,16 @@
          margin: 5px 0;
       }
    }
+   .oneColumn {
+      grid-template-columns: 1fr;
+      font-size: 90%;
+   }
+   .twoColumns {
+      grid-template-columns: 1fr 1fr;
+   }
    .details {
       display: grid;
       position: relative;
-      grid-template-columns: 50% 50%;
       width: 100%;
       height: 100%;
       overflow: hidden;
@@ -78,7 +84,7 @@
          }
       }
       .card {
-         padding: 10px 10px 10px 10px;
+         padding: 10px;
          height: 100%;
          overflow: hidden;
          width: 100%;
@@ -86,8 +92,13 @@
             overflow-y: scroll;
             padding: 10px;
             height: 100%;
-            background-color: rgb(245, 245, 240);
+            background-color: rgb(255, 255, 250);
             box-shadow: 2px 2px 10px #ccc;
+         }
+      }
+      .border {
+         &>div {
+            padding: 10px;
          }
       }
       .appCode {

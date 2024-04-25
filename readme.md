@@ -84,8 +84,8 @@ ProseEditor internally defines a set of standard plugins that used in general op
       ]
    }
 ```
-## ProseEditor Plugins
 
+## ProseEditor Plugins
 The `<ProseEditor>` component installs, by default, a number of plugins that are believed to be of general use. The `plugins` attribute allows additional, app-specific plugins to be installed:
 ```
 function Component() {
@@ -111,21 +111,24 @@ function Component() {
    }
 }
 ```
-### foldingHeadingPlugin
+
+### Pre-packaged ProseEditor Plugins 
+
+#### foldingHeadingPlugin
 allows folding of headings at all levels, and recursively. Folded text only changes `Decorations` on the document, hence the parts can still be copied and saved.
 
 This plugin adds folding triangles on the left margin next to the heading text. It is invisible until hovered over. Collapsed headings carry a right pointing triangle that is always visible.
 
-### wordCountPlugin
+#### wordCountPlugin
 adds a decoration on the right margin of each paragraph showing a live count of the number of words in the paragraph. Headings will show the sum of all words in themselves and all text blocks up to the next heading of the same level.
 
 The total number of words in the document will be displayed at the top right of the page
 
-#### Parameters:
+##### Parameters:
 - `show` (default: `true`): shows or hides the word count
 - `className`: a `css` class to apply to the decorations
 
-### foldingTagPlugin
+#### foldingTagPlugin
 Creates and maintains a list of tags that the document can be ***focused*** on.
 
 The plugin searches the document for words beginning with `#` and turns them into tags. Tags are visually emphasized and clickable. When clicking a tag the document filters and folds away paragraphs that don't contain the tag (without the `#`) and highlights the tag in the remaining visible paragraphs.
@@ -134,7 +137,7 @@ The plugin state consists of the set of all tags wrapped in Prosemirror `Decorat
 
 Text-folding of blocks not containing a tag can be programmatically triggered by dispatching a transaction that carries the `tag` as `meta` information (using `tr.setMeta(foldingTagPluginKey, tag)`)
 
-### tocPlugin
+#### tocPlugin
 A plugin that creates a Table of Content for the current document by listing the hierarchy of headings. The plugin has no immediate visual effect on the page. To programmatically process the heading structure, retrieve the plugin state with `getState` to get the `TOCSStateEntry[]` list,
 
 const entries = TOCPluginKey.getState(currentView.state)?.entries
@@ -143,20 +146,22 @@ which can then be rendered into a TOC with appropriate styling.
 
 A react hook, `useTOCRule()`, is also provided for inclusion in the rule set of the `variablesPlugin` below, through which a table of content can be readily rendered.
 
-### variablesPlugin
+#### variablesPlugin
 A plugin that manages a set of variables, as per their rule definitions. Variables can be placed in the document by bracing a rule name with `{:` and `}` signs, which will be replaced with an up-to-date variable content.
 
-#### Creating new Rules
+##### Creating new Rules
 New rules are simple to create by providing the following structure:
-```
-{ [ruleName:string]: {
-    text:    ()=>ReactNode
-    comment: string
-}}
+```typescript
+{ 
+   [ruleName:string]: {
+      text:    ()=>ReactNode
+      comment: string
+   }
+}
 ```   
 
-#### Help
-A special `help` rule is included by default. It will replace a `\{:help\}` variable with a list of defined variable rules, their explanation and current value:
+##### Help
+A special `help` rule is included by default. It will replace a `help` variable with a list of defined variable rules, their explanation and current value:
 ```
 {:help}
 ```

@@ -1,13 +1,13 @@
-import { Node }            from "prosemirror-model"
+import { useRef }                from "react";
+import { Node }                  from "prosemirror-model"
 import { EditorState, Plugin, PluginKey }           
-                           from 'prosemirror-state';
+                                 from 'prosemirror-state';
 import { Decoration, DecorationSet, EditorView } 
-                           from 'prosemirror-view';
-import { pluginTiming }    from "../hooks/useTimings";
-import styles              from "./plugin.module.scss";
-import { getThrottle }     from "@/lib/utils";
+                                 from 'prosemirror-view';
+import { getThrottle }           from "@/lib/utils";
+import { pluginTiming }          from "../hooks/useTimings";
+import styles                    from "./plugin.module.scss";
 import { useProseEditorContext } from "../hooks/useProseEditorContext";
-import { useRef } from "react";
 
 
 const {tmInit, tmApply, tmDecos} = pluginTiming('wordCountPlugin')

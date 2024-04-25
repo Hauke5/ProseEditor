@@ -6,6 +6,7 @@ import { EditorSimple, InstructionsSimple, codeSimple }
                   from './EditorSimple'
 import { EditorWithContext, InstructionsWithContext, codeWithContext } 
                   from './EditorWithContext'
+import { EditorWithPlugins, InstructionsWithPlugins, codeWithPlugins } from './EditorWithPlugins'
 
 
 type Example = {
@@ -27,6 +28,11 @@ const examples:Example[] = [{
    Instructions:  InstructionsWithContext,
    Component:     EditorWithContext,
    code:          codeWithContext
+},{
+   name:    'Editor with Plugins',
+   Instructions:  InstructionsWithPlugins,
+   Component:     EditorWithPlugins,
+   code:          codeWithPlugins
 }]
 
 const initialText = `
@@ -72,7 +78,8 @@ export default function ProseEditorPage() {
    }
 
    function EditorApp() {
-      return <div className={styles.details}>
+      const columns = examples[app].code? styles.twoColumns : styles.oneColumn
+      return <div className={`${styles.details} ${columns}`}>
          <Component initialText={initialText} />
          {examples[app].code && <div className={styles.appCode}>
             <div className={styles.frame}>
