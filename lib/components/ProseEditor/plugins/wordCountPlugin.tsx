@@ -1,10 +1,3 @@
-/**
- * ## wordCountPlugin
- * adds a decoration on the right margin of each paragraph showing a live count of the number of words in the paragraph.
- * Headings will show the sum of all words in themselves and all text blocks up to the next heading of the same level
- * The total number of words in the document will be displayed at the top right of the page
- * @module
- */
 import { Node }            from "prosemirror-model"
 import { EditorState, Plugin, PluginKey }           
                            from 'prosemirror-state';
@@ -46,11 +39,19 @@ interface ParagraphSpec {
 
 
 type WordCountProps = {
-   show?:   boolean
-   style?:  string
+   show?:      boolean
+   className?: string
 }
-export const wordCountPlugin = ({show=true, style}:WordCountProps) => {
-   const decoStyle = `${styles.wordcount} ${style??''}`
+/**
+ * adds a decoration on the right margin of each paragraph showing a live count of the number of words in the paragraph.
+ * Headings will show the sum of all words in themselves and all text blocks up to the next heading of the same level
+ * The total number of words in the document will be displayed at the top right of the page
+ * ### Parameters:
+ * - show (default: `true`): shows or hides the word count 
+ * - className: a `css` class to apply to the decorations
+ */
+export const wordCountPlugin = ({show=true, className}:WordCountProps) => {
+   const decoClass = `${styles.wordcount} ${className??''}`
    let decoSet:   DecorationSet     // can't be in state b/c it is updated asynchronously in `throttle`
    let decoSpecs: DecoSpec[]
    let view:      EditorView
@@ -61,7 +62,7 @@ export const wordCountPlugin = ({show=true, style}:WordCountProps) => {
       state: {
          init(_, state) { 
             return tmInit(()=> {
-               const counts = wordCountDeco(state.doc, decoStyle)
+               const counts = wordCountDeco(state.doc, decoClass)
                decoSet = DecorationSet.create(state.doc, counts.decos)
                decoSpecs = counts.decoSpecs
                return {decoSpecs, showCounts}
@@ -76,7 +77,7 @@ export const wordCountPlugin = ({show=true, style}:WordCountProps) => {
                   decoSet = decoSet.map(tr.mapping, newState.doc)
                } else throttle(`wordCount`, false, async () => {
                   // recreate the decos
-                  const counts = wordCountDeco(newState.doc, decoStyle)
+                  const counts = wordCountDeco(newState.doc, decoClass)
                   decoSet = DecorationSet.create(newState.doc, counts.decos)
                   decoSpecs = counts.decoSpecs
                   if (view) view.dispatch(view.state.tr)
@@ -98,9 +99,9 @@ export const wordCountPlugin = ({show=true, style}:WordCountProps) => {
    })
    
    
-   function wordCountDeco(node:Node, style:string):{decos:Decoration[], decoSpecs:DecoSpec[]}  {
+   function wordCountDeco(node:Node, className:string):{decos:Decoration[], decoSpecs:DecoSpec[]}  {
       const decoSpecs = countWords(node)
-      const decos = decoSpecs.map((deco:DecoSpec) => Decoration.widget(deco.pos, createDiv(deco, style)))
+      const decos = decoSpecs.map((deco:DecoSpec) => Decoration.widget(deco.pos, createDiv(deco, className)))
       return {decos, decoSpecs}
    }
 }
@@ -125,18 +126,18 @@ export function useWordCountRule() {
 }
 
 
-function createDiv(deco:DecoSpec, style:string) {
+function createDiv(deco:DecoSpec, className:string) {
    let div = document.createElement("div")
    div.textContent = typeof deco.words==='function'? deco.words() : deco.words;
    if (deco.headingLevel!==undefined) {
-      div.className = `${style} hdg${deco.headingLevel}`;
+      div.className = `${className} hdg${deco.headingLevel}`;
       (div as any).style = `
          ${deco.headingLevel===0?'color:#8a8;':''}
          text-decoration: underline;
          transform: translate(0, ${TOPS[deco.headingLevel]}px);
       `   
    } else {
-      div.className = `${style} par`;
+      div.className = `${className} par`;
    }
    return div
 }

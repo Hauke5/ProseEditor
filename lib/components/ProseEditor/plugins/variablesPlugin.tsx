@@ -21,7 +21,11 @@ import { pluginTiming } from "../hooks/useTimings"
 import styles           from './plugin.module.scss'
 
 //                %<var name>%
-const varMatch = /(?:^|\s)(%([a-zA-Z0-9_-]+)%)(?:\W|$)/g;
+// const varMatch = /(?:^|\s)(%([a-zA-Z0-9_-]+)%)(?:\W|$)/g;
+//                {:<var name>}
+const VarOpen = '{:'
+const VarClose = '}'
+const varMatch = new RegExp(`(?:^|\s)(${VarOpen}([a-zA-Z0-9_-]+)${VarClose})(?:\W|$)`,'g')
 
 const pluginKey = "variablesPlugin";
 const {tmInit, tmApply, tmDecos} = pluginTiming(pluginKey)
@@ -48,6 +52,11 @@ type VariablesPluginProps = {
    decoSet:       DecorationSet
 }
 
+/**
+ * A plugin that manages a set of variables, as per their rule definitions.
+ * Variables can be placed in the document by bracing a `rule name` with `%` signs,
+ * which will be replaced with an up-to-date variable content.
+ */
 export const variablesPlugin = (defs:VariableDefs) => {
    // add help text
    defs.help = getHelp(defs)
@@ -130,7 +139,7 @@ function hasVariableDef(doc: Node): boolean {
 
 
 /**
- * find all `#<tag>#` anchors, substitute them for variables, if a match, else thighlight them and make them clickable.
+ * find all `{:<tag>}` anchors, substitute them for variables, if a match, else thighlight them and make them clickable.
  * @param doc
  * @returns
  */
@@ -153,13 +162,13 @@ type Match = {
 
 function variableMatches(c:Node, rel: number, defs:VariableDefs):Match[] {
    const varMatches:Match[] = []
-   // find all %***% fields
+   // find all {:***} fields
    const matches = [...(c.text?.matchAll(varMatch) ?? [])]
    for (const match of matches) {
       const varValueFn = defs[match[2]]
       if (varValueFn && match.index!==undefined) {
          const pos = rel + match.index + match[0].indexOf(match[1])
-         const width = match[1].length  // core tag + one % on each side
+         const width = match[1].length
          const repl:Match = {pos, varValueFn, width}
          varMatches.push(repl)
       }
@@ -168,9 +177,8 @@ function variableMatches(c:Node, rel: number, defs:VariableDefs):Match[] {
 }
 
 function varElem(comment:string) {
-   // const value = varFn.text()
    let elem = document.createElement("var-value");
-   const root = createRoot(elem) //.render(value)
+   const root = createRoot(elem) 
    elem.title = comment
    return {root, elem}
 }
@@ -183,7 +191,7 @@ function getHelp(defs:VariableDefs) {
             <b>Comment</b>
             <b>Current Value</b>
             {Object.keys(defs).map(k=>k!=='help' && <Fragment key={k}>
-               <span>{`%${k}%:`}</span>
+               <span>{`${VarOpen}${k}${VarClose} :`}</span>
                <span>{defs[k].comment}</span>
                <span>{defs[k].text()}</span>
             </Fragment>)}
@@ -193,3 +201,25 @@ function getHelp(defs:VariableDefs) {
    })
 }
 
+
+
+export function useVariableRules():{[name:string]:VarValueFn} {
+   const time:VarValueFn = ({
+      text:    () => timeFormat.format(new Date()),
+      comment: `the time of last edit`
+   })
+   const date:VarValueFn = ({
+      text:    () => dateFormat.format(new Date()),
+      comment: `the date of last edit`
+   })
+   return {time, date}
+}
+
+
+const dateFormat = {
+   format: (date:Date) => `${date.getFullYear()}${`${date.getMonth()+1}`.padStart(2,'0')}${`${date.getDate()}`.padStart(2,'0')}`
+}
+
+const timeFormat = {
+   format: (date:Date) => `${`${date.getHours()}`.padStart(2,'0')}:${`${date.getMinutes()}`.padStart(2,'0')}:${`${date.getSeconds()}`.padStart(2,'0')}`
+}

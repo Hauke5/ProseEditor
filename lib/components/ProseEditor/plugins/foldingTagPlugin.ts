@@ -1,18 +1,3 @@
-/**
- * ## foldingTagPlugin
- * searches the document for words beginning with `#` and turns them into tags.
- * Tags are visually emphasized and clickable. When clicking a tag the document filters and folds
- * away paragraphs that don't contain the tag (without the `#`) and highlights the tag in the remaining,
- * visible paragraphs.
- * 
- * The plugin state consists of the set of all tags wrapped in `Decorations`. This can be used
- * elsewhere in the program, for example to show a list of known tags.
- * 
- * Text-folding of blocks not containing a tag can be programmatically triggered by dispatching 
- * a transaction that carries the `tag` as `meta` information (using `tr.setMeta(foldingTagPluginKey, tag)`)
- * 
- * @module
- */
 import { Node }                  from "prosemirror-model";
 import { Plugin, PluginKey, Transaction, EditorState }          
                                  from "prosemirror-state";
@@ -51,14 +36,17 @@ export interface TagsState {
 }
 
 /** 
- * creates and maintains a list of tags that the document can be **focused** on. 
- * - Searches the document for words beginning with `#` and turns them into tags.
- * - Once defined, all occurences of the tag in the document will be marked by a colored background. 
- * - Clicking on the tag, or dispatching a transaction that sets the `Meta` data for this plugin to the
- * tag text, will **focus** the document on all paragraphs that contain the `tag`. 
- * This is done by adding a decorator that adds a CSS class `hidden` to each non-tag paragraph, thus setting the `display` to `none`.
- * - consecutive hidden paragraphs have an ellipse icon on the left margin to indicate hidden content.
- * - clicking on an ellipse will un-hide the set of hidden paragraphs.
+ * Creates and maintains a list of tags that the document can be **focused** on. 
+ * The plugin searches the document for words beginning with `#` and turns them into tags.
+ * Tags are visually emphasized and clickable. When clicking a tag the document filters and folds
+ * away paragraphs that don't contain the tag (without the `#`) and highlights the tag in the remaining,
+ * visible paragraphs.
+ * 
+ * The plugin state consists of the set of all tags wrapped in `Decorations`. This can be used
+ * elsewhere in the program, for example to show a list of known tags.
+ * 
+ * Text-folding of blocks not containing a tag can be programmatically triggered by dispatching 
+ * a transaction that carries the `tag` as `meta` information (using `tr.setMeta(foldingTagPluginKey, tag)`)
  */
 export const foldingTagPlugin = () => {
    return new Plugin<TagsState>({

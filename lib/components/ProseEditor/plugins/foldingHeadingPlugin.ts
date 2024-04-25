@@ -1,11 +1,3 @@
-/**
- * ## foldingHeadingPlugin
- * allows folding of headings at all levels, and recursively.
- * Folded text only changes `Decorations` on the document, hence the parts can still be copied and saved.
- * This plugin adds folding triangles on the left margin next to the heading text.
- * It is invisible until hovered over. COllapsed headings carry right pointing triagle that is always visible. 
- * @module
- */
 import { Decoration, DecorationSet, EditorView } 
                            from "prosemirror-view";
 import { EditorState, Plugin, PluginKey } 
@@ -41,7 +33,12 @@ export interface HeadingState {
    decoSet:       DecorationSet
 }
 
-
+/**
+ * A plugin that allows folding of headings at all levels, and recursively.
+ * Folded text only changes `Decorations` on the document, hence the parts can still be copied and saved.
+ * This plugin adds folding triangles on the left margin next to the heading text. 
+ * It is invisible until hovered over. Collapsed headings carry a right pointing triangle that is always visible.
+ */
 export const foldingHeadingPlugin = () => {
    const {tmInit, tmApply, tmDecos} = pluginTiming(pluginName)
    return new Plugin<HeadingState>({

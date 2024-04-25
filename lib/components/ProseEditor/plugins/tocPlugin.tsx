@@ -26,6 +26,13 @@ export interface TocPluginState {
 
 export type TOCState = TOCSStateEntry[]
 
+/**
+ * A plugin that creates a Table of Content for the current document by listing the hierarchy of headings.
+ * Retrieve the plugin state to get the `TOCSStateEntry[]` list
+ * ```
+ *    const entries = TOCPluginKey.getState(currentView.state)?.entries
+ * ``` 
+ */
 export const tocPlugin = () => new Plugin<TocPluginState>({
    key: TOCPluginKey,
    state: {
@@ -57,15 +64,20 @@ export const tocPlugin = () => new Plugin<TocPluginState>({
    }
 });
 
+/**
+ * A hook that returns a `variable` rule to generate the TOC for the current doc.
+ * @returns 
+ */
 export function useTOCRule() {
    const view  = useCurrentView()
    
    return {
       toc: {
-         text: () => {
+         text: ():JSX.Element => {
             const h = [0,0,0,0,0,0]
             const state = view.current? TOCPluginKey.getState(view.current.state)?.entries : [] as TOCSStateEntry[]
-            return state && <div>
+            if (!state) return <div></div>
+            return <div>
                {state.map(entry => {
                   h[entry.level-1]++
                   const pre = h.slice(0, entry.level).join('.')
