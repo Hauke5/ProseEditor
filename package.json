@@ -14,6 +14,9 @@
       "type": "git",
       "url": "git+https://github.com/Hauke5/ProseEditor.git"
    },
+   "keywords": [
+      "Editor", "Prosemirror", "NextJS", "React", "rich text"
+   ],
    "scripts": {
       "dev": "./node_modules/.bin/next dev -p 3010",
       "build": "next build",
