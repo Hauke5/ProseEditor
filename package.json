@@ -1,6 +1,6 @@
 {
    "name": "@hauke5/prose-editor",
-   "version": "1.0.28",
+   "version": "1.0.29",
    "description": "Provides a markdownable text editing component based on Prosemirror",
    "author": {
       "name": "hauke5",
@@ -15,7 +15,11 @@
       "url": "git+https://github.com/Hauke5/ProseEditor.git"
    },
    "keywords": [
-      "Editor", "Prosemirror", "NextJS", "React", "rich text"
+      "Editor",
+      "Prosemirror",
+      "NextJS",
+      "React",
+      "rich text"
    ],
    "scripts": {
       "dev": "./node_modules/.bin/next dev -p 3010",
