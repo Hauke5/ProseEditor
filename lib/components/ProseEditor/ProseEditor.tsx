@@ -1,33 +1,39 @@
 import { MouseEvent, useEffect, useId, useRef }     
-                                    from 'react';
-import { DOMParser, Node, Schema }  from 'prosemirror-model';
+                                 from 'react';
+import { DOMParser, Node, Schema }  
+                                 from 'prosemirror-model';
 import { EditorState, Plugin, Transaction }   
-                                    from 'prosemirror-state';
-import { EditorView }               from 'prosemirror-view';
-import * as Inputrules              from 'prosemirror-inputrules';
-import { keymap }                   from 'prosemirror-keymap';
-import { undo, redo }               from 'prosemirror-history'
-import { BaseProps }                from '@/lib/components/BaseProps';
-import { pluginLoader }             from './pm/plugins';
+                                 from 'prosemirror-state';
+import { EditorView as PmEditorView }  
+                                  from 'prosemirror-view';
+import * as Inputrules           from 'prosemirror-inputrules';
+import { keymap }                from 'prosemirror-keymap';
+import { undo, redo }            from 'prosemirror-history'
+import { BaseProps }             from '@/lib/components/BaseProps';
+import { pluginLoader }          from './pm/plugins';
 import { changedSelectionPlugin, changeContentPlugin }   
-                                    from './plugins/changedPlugin';
-import { parser, serializer }       from './pm/markdown/markdown';
+                                 from './plugins/changedPlugin';
+import { parser, serializer }    from './pm/markdown/markdown';
 import { OpenPopup, ProseEditorPopupMenu }     
-                                    from './menu/ProseEditorPopupMenu';
-import styles                       from './styles/proseEditor.module.scss'
-import { corePlugins, schema }      from './registry';
-import { useProseEditorContext }    from './hooks/useProseEditorContext';
+                                 from './menu/ProseEditorPopupMenu';
+import styles                    from './styles/proseEditor.module.scss'
+import { corePlugins, schema }   from './registry';
+import { useProseEditorContext } from './hooks/useProseEditorContext';
 
 
 export function serialize(state:EditorState) {  
    return serializer.serialize(state.doc)
 }
 
+export type EditorView = PmEditorView & {
+   __myID:  string
+}
+
 export interface ProseEditorProps extends BaseProps{
    panelID?:         string
    newContent?:      string
    plugins?:         ()=>Plugin[]
-   newView?:         (view:EditorView)=>void
+   newView?:         (view:PmEditorView)=>void
    usePopupMenu?:    boolean
 }
 /**
@@ -43,17 +49,25 @@ export interface ProseEditorProps extends BaseProps{
  * @returns 
  */
 export function ProseEditor({panelID, newContent, className, usePopupMenu=true, plugins, newView, ...props}:ProseEditorProps) {
-   const {addView}         = useProseEditorContext()
-   const view              = useRef<EditorView>()
-   const id                = useId()
-   const openPopup         = useRef<OpenPopup>()
+   const {addView, removeView}   = useProseEditorContext()
+   const view                    = useRef<EditorView>()
+   const id                      = useId()
+   const openPopup               = useRef<OpenPopup>()
 
+   // run once with valid view.current: emtoy dispatch, needed to initialize variablePlugin (others???) 
+   useEffect(()=>{
+      if (view.current) view.current.dispatch(view.current.state.tr)
+   },[view.current])
    useEffect(()=>{ 
-      if (typeof newContent === 'string') 
-         view.current = createView(newContent)
-      else   
-         view.current = createView('Your Text Here')
-      return () => view.current?.destroy() 
+      view.current = createView((typeof newContent === 'string')? newContent : 'Your Text Here')
+      newView?.(view.current)   // inform parent of new view, if defined; allows for custom __myID
+      addView(view.current)
+      return () => {
+         if (view.current) {
+            removeView(view.current)
+            view.current.destroy() 
+         }
+      }
    },[newContent])
 
    return <>
@@ -71,11 +85,10 @@ export function ProseEditor({panelID, newContent, className, usePopupMenu=true, 
       // for some reason, checking todo list items doesn't work without this event
       e.preventDefault()
    }
-   function createView(content:string) {
-      const state = newEditorState(content, plugins?.())
-      const view = new EditorView(mount, { state, attributes:{}, dispatchTransaction})
-      addView(view)
-      newView?.(view)   // inform parent of new view, if defefined
+   function createView(content:string):EditorView {
+      const state = newEditorState(content ?? '', plugins?.())
+      const view = new PmEditorView(mount, { state, attributes:{}, dispatchTransaction}) as EditorView
+      view.__myID ??= `>${Math.floor(100000*Math.random())}`
       if (!view.hasFocus()) view.focus();
       return view
    

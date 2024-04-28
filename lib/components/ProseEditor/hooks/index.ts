@@ -1,5 +1,5 @@
 export * from './useChange'
-export * from './useCurrentView'
+export * from './useCurrentEditorView'
 export * from './usePluginState'
 export * from './useProseEditorContext'
 export * from './useTimings'

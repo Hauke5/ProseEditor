@@ -33,9 +33,9 @@ import { ProseEditorContext, proseEditorContext }
  * see {@link ProseEditorContext}
  */
 export function useProseEditorContext():ProseEditorContext {
-   const log = useLog(`useProseEditorContext`)
+   // const log = useLog(`useProseEditorContext`)
    const context = useContext(proseEditorContext)
-   if (!context) 
-      log.error('useProsemirrorContext is called outside the context. The calling app is responsible for define `ProsemirrorContext`.')
+   // if (!context) 
+   //    log.warn('useProsemirrorContext is called outside the context. The calling app is responsible for define `ProsemirrorContext`.')
    return context ?? {addView:()=>null, removeView:()=>null, currentView:null, views:[]}
 }

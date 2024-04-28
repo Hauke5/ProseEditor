@@ -1,12 +1,12 @@
 'use client'
-import { createContext, useEffect }         
+import { createContext, useRef }         
                                  from "react";
-import { EditorView }            from "prosemirror-view";
 import { BaseProps }             from "@/lib/components/BaseProps";
 import { useContextState }       
                                  from "@/lib/hooks/useContextState";
 import { ErrorBoundarySuspense } from "@/lib/errors/ErrorBoundary";
 import { useLog }                from "@/lib/hooks";
+import { EditorView }            from "./ProseEditor";
 
 
 type InternalContext = {
@@ -63,36 +63,43 @@ type ProseEditorContextProps = BaseProps & {
  * ```
  */
 export function ProseEditorContext({children}:ProseEditorContextProps) {
-   const log                      = useLog(`ProsemirrorContext`)
-   const {context, updateContext} = useContextState<InternalContext>({views:[], currentView:null})
-   
-   // update plugins with new view: dispatch empty transition
-   useEffect(()=>{
-      if (context.currentView) {
-         log.info(`ProsemirrorContext view change dispatch`)
-         context.currentView.dispatch(context.currentView.state.tr)
-      }
-   },[context.currentView])
-   
+   const log               = useLog(`ProsemirrorContext`)
+   const currentView       = useRef<EditorView|null>(null)
+   const views             = useRef<EditorView[]>([])
+   const {updateContext}   = useContextState<{}>({})
+      
    return <ErrorBoundarySuspense what={`ProsemirrorContext`}>
-      <proseEditorContext.Provider value={{...context, addView, removeView}}>
+      <proseEditorContext.Provider value={{currentView:currentView.current, views:views.current, addView, removeView}}>
          {children}
       </proseEditorContext.Provider>
    </ErrorBoundarySuspense>
 
-   function addView(view:EditorView) {
-      (view as any).__myID = `view_${Math.floor(100000*Math.random())}`
-      const i = context.views.findIndex(v => v===view)
-      log.info(`addView ${i} id: ${(view as any).__myID}`)
-      updateContext({currentView:view, views:context.views.concat(view)})
+   function addView(newView:EditorView) {
+      const i = views.current.findIndex(v => v===newView)
+      views.current.push(newView)
+      log.debug(()=>`addView ${i<0?'new':'existing'} id: ${(newView as any).__myID} of ${views.current.length} views: [${viewsList()}]`)
+      setActiveView()
+      updateContext({})
    }
 
-   function removeView(view:EditorView) {
-      const i = context.views.findIndex(v => v===view)
-      const views = context.views.filter(v => v!==view)
-      const currentView = context.views.at(-1) ?? null
-      const inew = context.views.findIndex(v => v===currentView)
-      log.info(`removeView ${i}, new current is ${inew}`)
-      updateContext({currentView, views})
+   function removeView(oldView:EditorView) {
+      const i = views.current.findIndex(v => v===oldView)
+      if (i<0) {
+         log.warn(`removeView: did not find view ${(oldView as any).__myID} in [${viewsList()}]`)
+         return
+      }
+      views.current = views.current.filter(v=>v.__myID!==oldView.__myID)
+      setActiveView()
+      const inew = views.current.findIndex(v => v===currentView.current)
+      log.debug(()=>`removeView ${i}, id=${(oldView as any).__myID}, new current is ${inew} of ${views.current.length}: [${viewsList()}]`)
+      updateContext({})
+   }
+
+   function setActiveView() {
+      currentView.current = views.current.find(v=>v.hasFocus()) ?? null
+   }
+
+   function viewsList() {
+      return views.current.map((v:any)=> v.__myID).join(', ')
    }
 }

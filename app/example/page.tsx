@@ -6,7 +6,8 @@ import { EditorSimple, InstructionsSimple, codeSimple }
                   from './EditorSimple'
 import { EditorWithContext, InstructionsWithContext, codeWithContext } 
                   from './EditorWithContext'
-import { EditorWithPlugins, InstructionsWithPlugins, codeWithPlugins } from './EditorWithPlugins'
+import { EditorWithPlugins, InstructionsWithPlugins, codeWithPlugins } 
+                  from './EditorWithPlugins'
 
 
 type Example = {

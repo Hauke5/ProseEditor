@@ -1,10 +1,10 @@
-import { Node }                  from "prosemirror-model";
+import { Node }                     from "prosemirror-model";
 import { Plugin, PluginKey, EditorState } 
-                                 from "prosemirror-state";
+                                    from "prosemirror-state";
 import { Decoration, DecorationSet } 
-                                 from "prosemirror-view";
-import { pluginTiming }          from "../hooks/useTimings";
-import { useCurrentView }        from "../hooks/useCurrentView";
+                                    from "prosemirror-view";
+import { pluginTiming }             from "../hooks/useTimings";
+import { useCurrentEditorViewRef }  from "../hooks/useCurrentEditorView";
 
 
 const pluginName = "tocPlugin"
@@ -69,13 +69,13 @@ export const tocPlugin = () => new Plugin<TocPluginState>({
  * @returns 
  */
 export function useTOCRule() {
-   const view  = useCurrentView()
+   const viewRef  = useCurrentEditorViewRef()
    
    return {
       toc: {
          text: ():JSX.Element => {
             const h = [0,0,0,0,0,0]
-            const state = view.current? TOCPluginKey.getState(view.current.state)?.entries : [] as TOCSStateEntry[]
+            const state = viewRef.current? TOCPluginKey.getState(viewRef.current.state)?.entries : [] as TOCSStateEntry[]
             if (!state) return <div></div>
             return <div>
                {state.map(entry => {

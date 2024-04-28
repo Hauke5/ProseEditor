@@ -1,11 +1,12 @@
-import { Plugin }             from "prosemirror-state";
+import { useEffect, useState } 
+                     from "react";
+import { Plugin }    from "prosemirror-state";
 import { ProseEditor, ProseEditorContext, VariableDefs, foldingHeadingPlugin, foldingTagPlugin, 
    tocPlugin, useTOCRule, useVariableRules, useWordCountRule, variablesPlugin, wordCountPlugin } 
-                              from "@/lib/components/ProseEditor";
-import styles                 from './page.module.scss'
-import { readme }             from './readme'
-import pluginStyles           from './pluginStyles.module.scss'
-import { useEffect, useState } from "react";
+                     from "@/lib/components/ProseEditor";
+import styles        from './page.module.scss'
+import { readme }    from './readme'
+import pluginStyles  from './pluginStyles.module.scss'
 
 
 export function EditorWithPlugins() {

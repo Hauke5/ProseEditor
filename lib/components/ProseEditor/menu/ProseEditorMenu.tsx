@@ -10,7 +10,7 @@ import styles                    from './menuPopup.module.scss'
 import { MenuItemSpecs, menuItemSpecs }
                                  from './menuItemSpecs';
 import { useProseEditorContext } from '../hooks/useProseEditorContext';
-import { useCurrentView }        from '../hooks/useCurrentView';
+import { useCurrentEditorViewRef }        from '../hooks/useCurrentEditorView';
 
 
 type ProseEditorMenuProps = BaseProps & {
@@ -39,9 +39,9 @@ export function ProseEditorMenu({items, ...props}:ProseEditorMenuProps) {
  * @returns 
  */
 export function useDefaultMenu(compressed=false, openDialog?:OpenDialog):MenuItem[] {
-   const view  = useCurrentView()
-   if (!view.current) return []
-   const items = menuItemSpecs(view.current, openDialog)
+   const viewRef  = useCurrentEditorViewRef()
+   if (!viewRef.current) return []
+   const items = menuItemSpecs(viewRef.current, openDialog)
    return compressed ? [
       items.undo(), items.redo(),
       menuSeparator('ver'),

@@ -5,7 +5,7 @@ import { ProseEditor, serialize }
 import { ProseEditorContext } from "@/lib/components/ProseEditor/ProseEditorContext";
 import { ProseEditorMenu }    from "@/lib/components/ProseEditor/menu/ProseEditorMenu";
 import { useContentChange }   from "@/lib/components/ProseEditor/hooks/useChange";
-import { useCurrentView }     from "@/lib/components/ProseEditor/hooks/useCurrentView";
+import { useCurrentEditorViewRef }     from "@/lib/components/ProseEditor/hooks/useCurrentEditorView";
 import styles                 from './page.module.scss'
 
 
@@ -17,13 +17,13 @@ export function EditorWithContext({initialText}:{initialText:string}) {
 }
 
 function Editor({initialText}:{initialText:string}) {
-   const view                    = useCurrentView()
+   const viewRef                 = useCurrentEditorViewRef()
    const contentChanged          = useContentChange()
    const [markDown, setMarkdown] = useState('')
 
    useEffect(()=>{
-      if (view.current) setMarkdown(serialize(view.current.state))
-   },[contentChanged, view.current])
+      if (viewRef.current) setMarkdown(serialize(viewRef.current.state))
+   },[contentChanged, viewRef.current])
 
    return <div className={styles.content}>
       <ProseEditorMenu className={styles.menu}/>
